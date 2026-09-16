@@ -10,6 +10,7 @@ import (
 
 	"github.com/RajanDhamala/puzzleSmith/Controllers"
 	"github.com/RajanDhamala/puzzleSmith/Database"
+	opening "github.com/RajanDhamala/puzzleSmith/Opening"
 	"github.com/RajanDhamala/puzzleSmith/Routes"
 	"github.com/RajanDhamala/puzzleSmith/internal/db"
 
@@ -38,6 +39,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	opening.ReadAllFiles()
 	r.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAccepted)
 		json.NewEncoder(w).Encode(map[string]string{
