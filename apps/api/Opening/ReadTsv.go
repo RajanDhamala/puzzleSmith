@@ -35,9 +35,11 @@ func OpeningWriter() {
 // later will add workers to read all files concurrently
 func ReadTsv(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
+
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Println("failed to open file")
+		return
 	}
 
 	defer file.Close()
@@ -46,7 +48,7 @@ func ReadTsv(path string, wg *sync.WaitGroup) {
 	tsvReader.Comma = '\t'
 
 	// 2 skip first line read once trick btw
-	_, _ = tsvReader.Read()
+	_, err = tsvReader.Read()
 	if err != nil {
 		return
 	}
@@ -61,6 +63,12 @@ func ReadTsv(path string, wg *sync.WaitGroup) {
 		if err != nil {
 			fmt.Println("error while reading", err.Error())
 		}
+
+		if len(record) < 3 {
+			fmt.Println("invalid record length", len(record))
+			continue
+		}
+
 		data := OpeningObj{
 			Eco:  record[0],
 			Name: record[1],

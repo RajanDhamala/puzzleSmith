@@ -132,29 +132,6 @@ func isPGNResultToken(token string) bool {
 	}
 }
 
-func isStandardChessGame(game *types.Game) bool {
-	if game == nil {
-		return false
-	}
-	if rules := strings.TrimSpace(game.Rules); rules != "" && !strings.EqualFold(rules, "chess") {
-		return false
-	}
-	initial := strings.Fields(strings.TrimSpace(game.InitialSetup))
-	if len(initial) == 0 {
-		return true
-	}
-	standard := strings.Fields("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -")
-	if len(initial) < len(standard) {
-		return false
-	}
-	for index := range standard {
-		if initial[index] != standard[index] {
-			return false
-		}
-	}
-	return true
-}
-
 func MaterialCount(fen string) (int, int) {
 	white := 0
 	black := 0
