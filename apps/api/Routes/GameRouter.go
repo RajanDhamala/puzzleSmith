@@ -16,4 +16,6 @@ func GameRouter(r chi.Router, controller *Controllers.Controller) {
 
 		json.NewEncoder(w).Encode(repsonse)
 	})
+
+	r.Get("/process", controller.ProcessGame)
 }

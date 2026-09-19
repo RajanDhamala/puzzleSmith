@@ -11,6 +11,7 @@ import (
 	"github.com/RajanDhamala/puzzleSmith/Controllers"
 	"github.com/RajanDhamala/puzzleSmith/Database"
 	opening "github.com/RajanDhamala/puzzleSmith/Opening"
+	processpipline "github.com/RajanDhamala/puzzleSmith/ProcessPipline"
 	"github.com/RajanDhamala/puzzleSmith/Routes"
 	"github.com/RajanDhamala/puzzleSmith/internal/db"
 
@@ -33,13 +34,15 @@ func main() {
 		panic("PORT environment variable is not set")
 	}
 
-	controller := Controllers.NewController(db.New(dbPool), dbPool)
+	go opening.ReadAllFiles()
+	instance := processpipline.ConnectStockfish()
+
+	controller := Controllers.NewController(db.New(dbPool), dbPool, instance)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	opening.ReadAllFiles()
 	r.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAccepted)
 		json.NewEncoder(w).Encode(map[string]string{
